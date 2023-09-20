@@ -9,7 +9,6 @@
 void exec(char *prog, char *line)
 {
 	int i = 0;
-	char *const custom_envp[] = {"MY_VAR=Hello", "ANOTHER_VAR=World", NULL};
 	const char delimiters[] = " ";
 	int wordCount;
 	char **argv;
@@ -17,7 +16,7 @@ void exec(char *prog, char *line)
 	wordCount = count_strings(line);
 	argv = splitStringIntoWords(line, delimiters, wordCount);
 
-	if (execve(argv[0], argv, custom_envp) == -1)
+	if (execve(argv[0], argv, NULL) == -1)
 	{
 		perror(prog);
 		for (i = 0; i < wordCount; i++)
