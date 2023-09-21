@@ -36,6 +36,8 @@ int main(__attribute__((unused)) int argc, char **argv)
 	pid_t child_pid;
 	int status;
 	bool interactive = isatty(STDIN_FILENO); /* Check if input is interactive */
+	char *cmd = argv[0];
+	struct stat st;
 
 	while (1)
 	{
@@ -54,11 +56,18 @@ int main(__attribute__((unused)) int argc, char **argv)
 			if (_strcmp(line, "exit") == 0)
 				break;
 
-			child_pid = fork();
-			if (child_pid == 0)
-				exec(argv[0], line);
+			if (stat(cmd, &st) == 0)
+			{
+				child_pid = fork();
+				if (child_pid == 0)
+					exec(cmd, line);
+				else
+					wait(&status);
+			}
 			else
-				wait(&status);
+			{
+				printf("%s: Command not found\n", line);
+			}
 		}
 		else
 		{
