@@ -95,16 +95,17 @@ char *_strdup(char *str1)
  *
  * @str1: string1
  * @str2: string2
+ * @count: how long to compare
  * Return: 0 if equal, 1 otherwise
  */
-int _strcmp(char *str1, char *str2)
+int _strcmp(char *str1, char *str2, size_t count)
 {
 	size_t i;
 
 	if (str1 == NULL || str2 == NULL)
 		return (1);
 
-	for (i = 0; i < 4; i++)
+	for (i = 0; i < count; i++)
 	{
 		if (str1[i] == '\0' || str2[i] == '\0')
 			return (1);

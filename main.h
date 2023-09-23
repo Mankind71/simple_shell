@@ -19,7 +19,7 @@ char *get_environment_variable(char *var_name,
 char *environ[]);
 char *add_path(char *str1, char *str2);
 char *_which(char *command, char *path);
-int _strcmp(char *str1, char *str2);
+int _strcmp(char *str1, char *str2, size_t count);
 char *_strdup(char *str1);
 int _strlen(char *str);
 char *trim_str(char *str1);
