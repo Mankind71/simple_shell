@@ -35,11 +35,6 @@ char *get_first_word(char *str, char *token)
 
 	count = _strlen(str);
 
-	if (count == 0)
-	{
-		printf("c\n");
-		return (NULL);
-	}
 	count = 0;
 
 	while (str[i])
