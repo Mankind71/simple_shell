@@ -16,7 +16,6 @@ char *trim_str(char *str)
 	str1 = malloc(sizeof(char) * (_strlen(str) - count + 1));
 	if (str1 == NULL)
 	{
-		printf("Memory allocation failed.\n");
 		exit(1);
 	}
 	while (str[count])

@@ -70,8 +70,6 @@ char *get_environment_variable(char *var_name, char *environ[])
 			return (variable + strlen(var_name) + 1);
 		}
 	}
-
-	printf("null");
 	return (NULL);
 }
 
