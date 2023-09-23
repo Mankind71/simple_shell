@@ -144,7 +144,6 @@ int main(__attribute__((unused)) int argc, char **argv, char *envp[])
 					printf("%s: Command not found\n", first_word);
 				}
 			}
-			free(first_word);
 		}
 		else
 		{
@@ -154,6 +153,7 @@ int main(__attribute__((unused)) int argc, char **argv, char *envp[])
 		}
 	}
 
+	free(first_word);
 	free(filepath);
 	free(line);
 	return (0);
