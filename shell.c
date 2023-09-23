@@ -70,11 +70,11 @@ char *get_first_word(char *str, char *token)
  */
 int main(__attribute__((unused)) int argc, char **argv, char *envp[])
 {
-	char *line = NULL, *cmd = argv[0], *first_word, *path, *filepath;
+	char *line = NULL, *cmd = argv[0], *path, *filepath;
 	char **env_var = envp;
 	size_t len = 0, i;
 	ssize_t nread = 0;
-	int num_of_words, count;
+	int num_of_words;
 	bool interactive = isatty(STDIN_FILENO); /* Check if input is interactive */
 	struct stat st;
 
@@ -94,11 +94,8 @@ int main(__attribute__((unused)) int argc, char **argv, char *envp[])
 				line[nread - 1] = '\0';
 
 			num_of_words = count_words(line);
-			count = _strlen(line);
 			if (num_of_words == 0)
-			{
 				continue;
-			}
 
 			line = trim_str(line);
 			if (_strcmp(line, "exit", 4) == 0)
@@ -117,29 +114,23 @@ int main(__attribute__((unused)) int argc, char **argv, char *envp[])
 				continue;
 			}
 
-			first_word = malloc(sizeof(char) * count);
-			first_word = get_first_word(line, first_word);
 
-			/* a code to substitute line in stat()
-			 * i.e get the first word
-			 */
-			if (stat(first_word, &st) == 0)
+			if (stat(line, &st) == 0)
 			{
 				_fork(cmd, line);
 			}
 			else
 			{
-				filepath = _which(first_word, path);
+				filepath = _which(line, path);
 				if (filepath)
 				{
 					_fork(cmd, add_path(filepath, line));
 				}
 				else
 				{
-					printf("%s: Command not found\n", first_word);
+					printf("%s: Command not found\n", line);
 				}
 			}
-			free(first_word);
 		}
 		else
 		{
