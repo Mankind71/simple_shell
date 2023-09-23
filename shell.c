@@ -72,7 +72,7 @@ int main(__attribute__((unused)) int argc, char **argv, char *envp[])
 {
 	char *line = NULL, *cmd = argv[0], *path, *filepath;
 	char **env_var = envp;
-	size_t len = 0, i;
+	size_t len = 0;
 	ssize_t nread = 0;
 	int num_of_words;
 	bool interactive = isatty(STDIN_FILENO); /* Check if input is interactive */
@@ -96,24 +96,6 @@ int main(__attribute__((unused)) int argc, char **argv, char *envp[])
 			num_of_words = count_words(line);
 			if (num_of_words == 0)
 				continue;
-
-			line = trim_str(line);
-			if (_strcmp(line, "exit", 4) == 0)
-			{
-				break;
-			}
-
-			if (_strcmp(line, "env", 3) == 0)
-			{
-				i = 0;
-				while (envp[i] != NULL)
-				{
-					printf("%s\n", envp[i]);
-					i++;
-				}
-				continue;
-			}
-
 
 			if (stat(line, &st) == 0)
 			{

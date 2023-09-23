@@ -63,11 +63,11 @@ char *get_environment_variable(char *var_name, char *environ[])
 	{
 		char *variable = *env;
 		/* Check if the variable name matches the one we're looking for */
-		if (strncmp(variable, var_name, strlen(var_name)) == 0 &&
-			variable[strlen(var_name)] == '=')
+		if (_strcmp(variable, var_name, _strlen(var_name)) == 0 &&
+			variable[_strlen(var_name)] == '=')
 		{
 			/* Return the value part of the variable */
-			return (variable + strlen(var_name) + 1);
+			return (variable + _strlen(var_name) + 1);
 		}
 	}
 	return (NULL);
