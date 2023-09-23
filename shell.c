@@ -105,7 +105,7 @@ int main(__attribute__((unused)) int argc, char **argv, char *envp[])
 			printf("\n");
 			break;
 		}
+		free(line);
 	}
-	free(line);
 	return (0);
 }
