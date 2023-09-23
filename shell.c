@@ -1,24 +1,68 @@
 #include "main.h"
 
 /**
- * _strcmp - compare 2 strings
+ * _fork - create fork process
  *
- * @str1: string1
- * @str2: string2
- * Return: 0 if equal, 1 otherwise
+ * @cmd: command
+ * @line: line
  */
-
-int _strcmp(char *str1, char *str2)
+void _fork(char *cmd, char *line)
 {
-	size_t i;
+	pid_t child_pid;
+	int status;
 
-	for (i = 0; i < 4; i++)
+	child_pid = fork();
+	if (child_pid == 0)
 	{
-		if (str1[i] != str2[i])
-			return (1);
+		exec(cmd, line);
+	}
+	else
+	{
+		wait(&status);
+	}
+}
+
+/**
+ * get_first_word - get the first word from cmd line
+ *
+ * @str: str to extract word
+ * @token: return cmd
+ * Return: the first word
+ */
+char *get_first_word(char *str, char *token)
+{
+	int i = 0, count = 0;
+
+	count = _strlen(str);
+
+	if (count == 0)
+	{
+		printf("c\n");
+		return (NULL);
+	}
+	count = 0;
+
+	while (str[i])
+	{
+		if (str[i] == ' ')
+		{
+			i++;
+			continue;
+		}
+		if (str[i] != ' ')
+		{
+			token[count] = str[i];
+			count++;
+			if (str[i + 1] == ' ' || str[i + 1] == '\0')
+			{
+				break;
+			}
+			i++;
+		}
 	}
 
-	return (0);
+	token[count] = '\0';
+	return (token);
 }
 
 /**
@@ -26,19 +70,20 @@ int _strcmp(char *str1, char *str2)
  *
  * @argc: arg count
  * @argv: arg vector
+ * @envp: env var
  * Return: Always 0.
  */
-int main(__attribute__((unused)) int argc, char **argv)
+int main(__attribute__((unused)) int argc, char **argv, char *envp[])
 {
-	char *line = NULL;
+	char *line = NULL, *cmd = argv[0], *first_word, *path, *filepath;
+	char **env_var = envp;
 	size_t len = 0;
 	ssize_t nread = 0;
-	pid_t child_pid;
-	int status;
+	int num_of_words, count;
 	bool interactive = isatty(STDIN_FILENO); /* Check if input is interactive */
-	char *cmd = argv[0];
 	struct stat st;
 
+	path = get_environment_variable("PATH", env_var);
 	while (1)
 	{
 		if (interactive)
@@ -53,21 +98,43 @@ int main(__attribute__((unused)) int argc, char **argv)
 			if (line[nread - 1] == '\n')
 				line[nread - 1] = '\0';
 
-			if (_strcmp(line, "exit") == 0)
-				break;
-
-			if (stat(cmd, &st) == 0)
+			num_of_words = count_words(line);
+			count = _strlen(line);
+			if (num_of_words == 0)
 			{
-				child_pid = fork();
-				if (child_pid == 0)
-					exec(cmd, line);
-				else
-					wait(&status);
+				continue;
+			}
+
+			line = trim_str(line);
+			if (_strcmp(line, "exit") == 0)
+			{
+				free(line);
+				break;
+			}
+
+			first_word = malloc(sizeof(char) * count);
+			first_word = get_first_word(line, first_word);
+
+			/* a code to substitute line in stat()
+			 * i.e get the first word
+			 */
+			if (stat(first_word, &st) == 0)
+			{
+				_fork(cmd, line);
 			}
 			else
 			{
-				printf("%s: Command not found\n", line);
+				filepath = _which(first_word, path);
+				if (filepath)
+				{
+					_fork(cmd, add_path(filepath, line));
+				}
+				else
+				{
+					printf("%s: Command not found\n", first_word);
+				}
 			}
+			free(first_word);
 		}
 		else
 		{
@@ -77,6 +144,7 @@ int main(__attribute__((unused)) int argc, char **argv)
 		}
 	}
 
+	free(filepath);
 	free(line);
 	return (0);
 }

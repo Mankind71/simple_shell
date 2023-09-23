@@ -2,6 +2,8 @@
 	"files.associations": {
 		"*.js": "javascriptreact",
 		"main.h": "c",
-		"stdio.h": "c"
+		"stdio.h": "c",
+		"wait.h": "c",
+		"stdlib.h": "c"
 	}
 }

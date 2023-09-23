@@ -13,7 +13,7 @@ void exec(char *prog, char *line)
 	int wordCount;
 	char **argv;
 
-	wordCount = count_strings(line);
+	wordCount = count_words(line);
 	argv = splitStringIntoWords(line, delimiters, wordCount);
 
 	if (execve(argv[0], argv, NULL) == -1)
