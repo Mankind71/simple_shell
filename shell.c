@@ -85,8 +85,6 @@ int main(__attribute__((unused)) int argc, char **argv, char *envp[])
 		{
 			if (line[nread - 1] == '\n')
 				line[nread - 1] = '\0';
-			if (count_words(line) == 0)
-				continue;
 			if (stat(line, &st) == 0)
 			{
 				_fork(cmd, line);
