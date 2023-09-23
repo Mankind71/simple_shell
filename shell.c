@@ -74,29 +74,19 @@ int main(__attribute__((unused)) int argc, char **argv, char *envp[])
 	char **env_var = envp;
 	size_t len = 0;
 	ssize_t nread = 0;
-	int num_of_words;
-	bool interactive = isatty(STDIN_FILENO); /* Check if input is interactive */
 	struct stat st;
 
 	path = get_environment_variable("PATH", env_var);
 	while (1)
 	{
-		if (interactive)
-		{
-			printf("$ ");
-			fflush(stdout);
-		}
-
+		printf("$ ");
 		nread = getline(&line, &len, stdin);
 		if (nread != -1)
 		{
 			if (line[nread - 1] == '\n')
 				line[nread - 1] = '\0';
-
-			num_of_words = count_words(line);
-			if (num_of_words == 0)
+			if (count_words(line) == 0)
 				continue;
-
 			if (stat(line, &st) == 0)
 			{
 				_fork(cmd, line);
@@ -105,19 +95,14 @@ int main(__attribute__((unused)) int argc, char **argv, char *envp[])
 			{
 				filepath = _which(line, path);
 				if (filepath)
-				{
 					_fork(cmd, add_path(filepath, line));
-				}
 				else
-				{
 					printf("%s: Command not found\n", line);
-				}
 			}
 		}
 		else
 		{
-			if (interactive)
-				printf("\n");
+			printf("\n");
 			break;
 		}
 	}
